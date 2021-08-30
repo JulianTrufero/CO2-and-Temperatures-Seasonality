@@ -25,7 +25,7 @@ datos seleccionando la mediana del valor mensual. Primero, por cuestiones metodo
 
 tem = cf.agrup_mensual(tee)
 
-cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Kansas City', 'Houston', 'Chicago', 'Atlanta', 'Miami',
               'Toronto', 'New York', 'Montreal'], tem)
 """
 Convertimos los valores en grados kelvin a celsius y reposicionamos las fechas como una columna. Y los exportamos
@@ -46,7 +46,7 @@ datos seleccionando el desvío estandar mensual.
 
 volat = cf.agrup_mensual_std(tee)
 
-cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Kansas City', 'Houston', 'Chicago', 'Atlanta', 'Miami',
               'Toronto', 'New York', 'Montreal'], volat)
 
 volat = volat.reset_index()
@@ -60,8 +60,8 @@ Repetimos proceso anterior con los datos de humedad
 
 hm = cf.agrup_mensual(he)
 
-cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
-              'Toronto', 'New York', 'Montreal'], h)
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Kansas City', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+              'Toronto', 'New York', 'Montreal'], hm)
 
 hm = hm.reset_index()
 
@@ -72,7 +72,7 @@ hm.to_csv('hm',index=False)
 
 volath = cf.agrup_mensual_std(he)
 
-cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Kansas City', 'Houston', 'Chicago', 'Atlanta', 'Miami',
               'Toronto', 'New York', 'Montreal'], volath)
 
 volath = volath.reset_index()
@@ -93,7 +93,7 @@ c = c.rename(columns={'cycle': 'Co2 Level'})
 Acoplamos las columnas de año, mes y dia en una sola, y agrupamos los valores por la mediana mensual
 """
 
-dates = pd.period_range(start='2011-01-01', end='2021-08-28', freq='D')
+dates = pd.period_range(start='2011-01-01', end='2021-08-29', freq='D')
 
 c['fechas'] = [str(d) for d in dates]
 
@@ -133,4 +133,5 @@ tyc.to_csv('tyc',index=False)
 hyc = hm.set_index('Date').join(co2.set_index('Date'))
 
 hyc = hyc.reset_index()
+
 

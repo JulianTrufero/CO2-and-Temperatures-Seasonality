@@ -25,14 +25,29 @@ def celsius_conv(row, x):
     return row
 
 def agrup_mensual_std(x):
+    """
+    Toma como argumento un data frame, le agrega la columna 'Date', itera sobre la columna 'fechas' seleccionando
+    el año y el mes del dato, y agrupa los datos por mes utilizando el desvío estandar. El resultado son los
+    desvíos estandar mensuales de las temperaturas para cada ciudad.
+    """
     x['Date'] = x.fechas.apply(lambda y: y[:7])
     return x.groupby("Date").std()
 
 def agrup_mensual(x):
+    """
+    Toma como argumento un data frame, le agrega la columna 'Date', itera sobre la columna 'fechas' seleccionando
+    el año y el mes del dato, y agrupa los datos por mes utilizando la mediana. El resultado es la mediana
+    mensual de las temperaturas para cada ciudad.
+    """
     x['Date'] = x.fechas.apply(lambda y: y[:7])
     return x.groupby("Date").median()
 
 def get_carbon_data(url):
+    """
+    Toma como argumento una url, agrega los headers específicos de la API en cuestión, genera una variable
+    'response' haciendo un request a la url. Luego transforma la response en un json, para que esté en formato
+    diccionario. Usando la response transformada, retorna un data frame.
+    """
     url = f"{url}"
     headers = {
     'x-rapidapi-host': "daily-atmosphere-carbon-dioxide-concentration.p.rapidapi.com",
@@ -44,10 +59,19 @@ def get_carbon_data(url):
     return c
 
 def agrup_mensual_co2(x):
+    """
+    Toma como argumento un data frame, le agrega la columna 'Date', itera sobre la columna 'fechas' seleccionando
+    el año y el mes del dato, y agrupa los datos por mes utilizando la mediana. En este caso, el resultado es la mediana
+    mensual de los valores de co2.
+    """
     x['Date'] = x.fechas.apply(lambda y: y[:7])
     return x.groupby("Date").agg({"Co2 Level": "median"})
 
 def chop_co2(x):
+    """
+    Toma como argumento un data frame, particularmente el de datos de Co2, y recorta las primeras 21 filas,
+    y las últimas 45, de esta forma queda el data frame de la misma longitud que el de las temperaturas.
+    """
     for i in range(83, 128):
         x.drop([i], axis=0, inplace=True)
     for i in range(21):
