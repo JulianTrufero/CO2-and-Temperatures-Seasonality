@@ -14,17 +14,22 @@ def keep_columns(x, y):
         if i not in relevant:
             y.drop(columns=[i], inplace=True)
 
-def celsius_conv(row):
-    for i in tem.index:
+def celsius_conv(row, x):
+    """
+    Esta función toma como argumentos un data frame "x" y  la fila del data frame. Itera sobre los índices
+    del data frame y convierte cada valor de la fila a grados celsius
+    """
+
+    for i in x.index:
            row[i] = row[i] - 273.15
     return row
 
 def agrup_mensual_std(x):
-    x['Date'] = x.datetime.apply(lambda y: y[:7])
+    x['Date'] = x.fechas.apply(lambda y: y[:7])
     return x.groupby("Date").std()
 
 def agrup_mensual(x):
-    x['Date'] = x.datetime.apply(lambda y: y[:7])
+    x['Date'] = x.fechas.apply(lambda y: y[:7])
     return x.groupby("Date").median()
 
 def get_carbon_data(url):
@@ -39,12 +44,12 @@ def get_carbon_data(url):
     return c
 
 def agrup_mensual_co2(x):
-    x['Date'] = x.datetime.apply(lambda y: y[:7])
+    x['Date'] = x.fechas.apply(lambda y: y[:7])
     return x.groupby("Date").agg({"Co2 Level": "median"})
 
 def chop_co2(x):
     for i in range(83, 128):
-        cco2.drop([i], axis=0, inplace=True)
+        x.drop([i], axis=0, inplace=True)
     for i in range(21):
-        cco2.drop([i], axis=0, inplace=True)
-    return cco2
+        x.drop([i], axis=0, inplace=True)
+    return x

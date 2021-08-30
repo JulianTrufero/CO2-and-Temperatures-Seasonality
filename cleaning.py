@@ -6,34 +6,37 @@ import json
 import numpy as np
 import pandas as pd
 import requests
-import src.functions as cf
+import scr.functions as cf
 
 #Importamos el data set de temperaturas y comenzaremos con el cleaning
 
 te = pd.read_csv('/home/julian/Cursos/Ironhack/Proyectos/Proyecto2/temperature.csv')
 h = pd.read_csv('/home/julian/Cursos/Ironhack/Proyectos/Proyecto2/humidity.csv')
 
+tee = te.rename(columns={'datetime': 'fechas'}) 
+he = h.rename(columns={'datetime': 'fechas'}) 
 
 #TEMPERATURAS MEDIANAS MENSUALES EN CELSIUS
 """
 Construimos un nuevo data frame con una columna de datos temporales, mostrando solo el año y el mes. Y agruparemos los
-datos seleccionando la mediana del valor mensual.
+datos seleccionando la mediana del valor mensual. Primero, por cuestiones metodologicas, renombramos la columna
+'datetime' por 'fechas'
 """
 
-tem = cf.agrup_mensual(te)
+tem = cf.agrup_mensual(tee)
 
-keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
               'Toronto', 'New York', 'Montreal'], tem)
 """
 Convertimos los valores en grados kelvin a celsius y reposicionamos las fechas como una columna. Y los exportamos
 a un csv
 """
 
-temc = tem.apply(lambda row : cf.celsius_conv(row))
+temc = tem.apply(lambda row : cf.celsius_conv(row, tem))
 
 temc = temc.reset_index()
 
-temc.to_csv('sdf',index=False)
+temc.to_csv('temc',index=False)
 
 #VARIABILIDAD MENSUAL DE TEMPERATURAS (EN K)
 """
@@ -41,33 +44,35 @@ Construimos un nuevo data frame con una columna de datos temporales, mostrando s
 datos seleccionando el desvío estandar mensual.
 """
 
-volat = cf.agrup_mensual_std(te)
+volat = cf.agrup_mensual_std(tee)
 
-keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
               'Toronto', 'New York', 'Montreal'], volat)
 
 volat = volat.reset_index()
 
-volat.to_csv('sdf',index=False)
+volat.to_csv('volat',index=False)
 
 #VALORES DE HUMEDAD MENSUAL 
 """
 Repetimos proceso anterior con los datos de humedad
 """
-hm = cf.agrup_mensual(h)
 
-keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+hm = cf.agrup_mensual(he)
+
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
               'Toronto', 'New York', 'Montreal'], h)
 
 hm = hm.reset_index()
 
-hm.to_csv('sdf',index=False)
+hm.to_csv('hm',index=False)
 
 #VARIABILIDAD MENSUAL DE LA HUMEDAD
 
-volath = cf.agrup_mensual_std(h)
 
-keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
+volath = cf.agrup_mensual_std(he)
+
+cf.keep_columns(['Vancouver', 'Los Angeles', 'Denver', 'Houston', 'Chicago', 'Atlanta', 'Miami',
               'Toronto', 'New York', 'Montreal'], volath)
 
 volath = volath.reset_index()
@@ -90,24 +95,27 @@ Acoplamos las columnas de año, mes y dia en una sola, y agrupamos los valores p
 
 dates = pd.period_range(start='2011-01-01', end='2021-08-28', freq='D')
 
-c['datetime'] = [str(d) for d in dates]
+c['fechas'] = [str(d) for d in dates]
 
-cf.keep_columns(['datetime', 'Co2 Level'], c)
+cf.keep_columns(['fechas', 'Co2 Level'], c)
 
 co2 = cf.agrup_mensual_co2(c)
 
 co2 = co2.reset_index()
 
-co2.to_csv('sdf',index=False)
+co2.to_csv('co2',index=False)
 
 """
 Duplicamos el data frame de dioxido de carbono, pero escalado a las fechas del data set de 
 temperaturas y humedad
 """
+cco2 = cf.agrup_mensual_co2(c)
+
+cco2 = cco2.reset_index()
 
 cco2 = cf.chop_co2(cco2)
 
-cco2.to_csv('sdf',index=False)
+cco2.to_csv('cco2',index=False)
 
 #TEMPERATURAS Y CARBONO
 """
@@ -118,7 +126,7 @@ tyc = temc.set_index('Date').join(co2.set_index('Date'))
 
 tyc = tyc.reset_index()
 
-tyc.to_csv('sdf',index=False)
+tyc.to_csv('tyc',index=False)
 
 ##HUMEDAD Y CARBONO
 
