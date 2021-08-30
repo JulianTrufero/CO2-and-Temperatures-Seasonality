@@ -1,4 +1,4 @@
-[image](https://github.com/JulianTrufero/CO2-and-Temperatures-Seasonality/blob/main/images/1573587665_archive_shutterstock_772541140.jpg)
+(https://github.com/JulianTrufero/CO2-and-Temperatures-Seasonality/blob/main/images/1573587665_archive_shutterstock_772541140.jpg?raw=true)
 
 # Co2 y Temperaturas: 
 PROYECTO DE DATA PIPELINES
