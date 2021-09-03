@@ -51,7 +51,7 @@ def get_carbon_data(url):
     url = f"{url}"
     headers = {
     'x-rapidapi-host': "daily-atmosphere-carbon-dioxide-concentration.p.rapidapi.com",
-    'x-rapidapi-key': "6f91c81d8fmshc83b86b1b6c6c5cp108956jsnef221ca08c9a"
+    'x-rapidapi-key': ""
     }
     response = requests.request("GET", url, headers=headers)
     t = response.json()
